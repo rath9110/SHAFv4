@@ -1,6 +1,6 @@
 document.addEventListener("DOMContentLoaded", async () => {
     console.log("Popup loaded!");
-
+    
     const detectedProduct = document.getElementById("detectedProduct");
     const copyButton = document.getElementById("copyProductName");
     const searchResults = document.getElementById("searchResults");
