@@ -1,0 +1,237 @@
+/* General Styles */
+body {
+    font-family: "Arial", sans-serif;
+    background-color: #f4f4f9;
+    margin: 0;
+    padding: 10px;
+    width: 360px; /* Ensure fixed width */
+    height: auto;
+    max-height: 650px; /* Prevent excessive height */
+    overflow-y: auto; /* Enable vertical scrolling if needed */
+    box-sizing: border-box;
+}
+
+/* Ensure the popup container scales properly */
+#popupContainer {
+    background: white;
+    padding: 12px;
+    border-radius: 10px;
+    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.2);
+    width: 100%;
+    max-width: 320px; /* Prevent width overflow */
+    overflow-x: hidden; /* Prevent horizontal scroll */
+}
+
+/* Prevent inner containers from breaking the layout */
+#productContainer, #searchResults, #relatedProducts {
+    width: 100%;
+    max-width: 300px;
+    margin: 0 auto;
+    overflow-x: hidden; /* Ensure no horizontal scrolling */
+}
+
+/* Prevent abrupt cutoff */
+html, body {
+    min-height: 100%;
+    width: 100%;
+    overflow-x: hidden; /* Remove horizontal scroll */
+}
+
+/* Ensure popup doesn't overflow */
+html {
+    min-width: 360px !important;
+    max-width: 360px !important;
+    min-height: 600px !important;
+    max-height: 650px !important;
+    overflow-x: hidden;
+    overflow-y: auto;
+}
+
+/* Header */
+h1 {
+    font-size: 18px;
+    color: #A8D5BA;
+    text-align: center;
+    margin-bottom: 10px;
+}
+
+/* Product Detection Section */
+#productContainer {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    background: #fff;
+    padding: 10px;
+    border-radius: 8px;
+    border: 1px solid #ddd;
+    box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+/* Detected Product */
+#detectedProduct {
+    font-size: 16px;
+    font-weight: bold;
+    color: #333;
+    margin: 0;
+    flex-grow: 1;
+}
+
+/* Copy Button */
+#copyProductName {
+    width: 24px;
+    height: 24px;
+    padding: 5px;
+    border: none;
+    background: none;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: transform 0.2s ease-in-out;
+}
+
+#copyProductName:active {
+    transform: scale(1.2);
+}
+
+/* Copy Icon */
+#copyIcon {
+    width: 16px;
+    height: 16px;
+    object-fit: contain;
+    opacity: 0.8;
+}
+
+/* Search Results */
+#searchResults {
+    margin-top: 10px;
+    text-align: center;
+    font-size: 14px;
+    color: #666;
+}
+
+/* Spinner animation */
+.spinner {
+    width: 40px;
+    height: 40px;
+    border: 4px solid rgba(0, 0, 0, 0.1);
+    border-top: 4px solid #A8D5BA;
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+    margin: 10px auto;
+    display: none;
+}
+
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
+
+/* Related Listings Section */
+#relatedProducts {
+    margin-top: 15px;
+    padding: 10px;
+    background-color: #fff;
+    border-radius: 10px;
+    box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.2);
+}
+
+#relatedProducts h2 {
+    text-align: center;
+    font-size: 16px;
+    margin-bottom: 8px;
+    color: #444;
+}
+
+/* Listings Container */
+.listings-container {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    padding: 5px;
+    max-height: 300px;
+    overflow-y: auto;
+    overflow-x: hidden;
+}
+
+/* Individual Listing */
+.listing {
+    display: flex;
+    align-items: center;
+    background: #fff;
+    padding: 8px;
+    border-radius: 8px;
+    border: 1px solid #ddd;
+    transition: background 0.2s ease-in-out, transform 0.2s;
+    overflow-x: hidden;
+}
+
+.listing:hover {
+    background: #f8f9fa;
+    transform: scale(1.02);
+}
+
+/* Listing Link */
+.listing a {
+    display: flex;
+    align-items: center;
+    text-decoration: none;
+    color: #333;
+    width: 100%;
+}
+
+/* Listing Image */
+.listing img {
+    width: 50px;
+    height: 50px;
+    border-radius: 5px;
+    margin-right: 10px;
+    object-fit: cover;
+    border: 1px solid #ddd;
+}
+
+/* Listing Title */
+.listing-title {
+    font-size: 14px;
+    font-weight: bold;
+    color: #222;
+}
+
+/* Listing Price */
+.listing p {
+    font-size: 13px;
+    font-weight: bold;
+    color: #222;
+    margin-left: auto;
+}
+
+/* Mobile-Friendly Enhancements */
+@media screen and (max-width: 400px) {
+    body {
+        width: 100%;
+        overflow-x: hidden;
+    }
+}
+
+/* See More Button */
+.see-more-button {
+    display: block;
+    width: fit-content;
+    margin: 10px auto 0 auto;
+    padding: 6px 12px;
+    background-color: #A8D5BA;
+    color: #fff;
+    font-size: 13px;
+    font-weight: bold;
+    text-align: center;
+    text-decoration: none;
+    border-radius: 6px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    transition: background-color 0.2s ease-in-out, transform 0.2s ease-in-out;
+}
+
+.see-more-button:hover {
+    background-color: #96c8aa;
+    transform: scale(1.05);
+}

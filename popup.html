@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Second-Hand Finder</title>
+    <link rel="stylesheet" href="popup.css">
+    <script src="popup.js" defer></script>
+</head>
+<body>
+    <div id="popupContainer">
+        <h1>Second-Hand Finder</h1>
+
+        <div id="productContainer">
+            <p id="detectedProduct">No product detected yet...</p>
+            <button id="copyProductName" title="Copy to clipboard">
+                <img src="icons/copy_icon.png" alt="Copy" id="copyIcon">
+            </button>
+        </div>
+
+        <div id="searchResults">
+            <p>Searching for listings...</p>
+            <div id="loader"></div> <!-- Loader element -->
+        </div>
+
+        <!-- New section for displaying listings from Tradera & Blocket -->
+        <div id="relatedProducts">
+            <h2>Related Listings</h2>
+            <div id="traderaResults">
+                <h3>Tradera</h3>
+                <div class="listings-container" id="traderaContainer"></div>
+                <a id="seeMoreTradera" class="see-more-button" href="#" target="_blank">See more on Tradera</a>
+            </div>
+            
+            <div id="blocketResults">
+                <h3>Blocket</h3>
+                <div class="listings-container" id="blocketContainer"></div>
+                <a id="seeMoreBlocket" class="see-more-button" href="#" target="_blank">See more on Blocket</a>
+            </div>
+                      
+        </div>
+    </div>
+</body>
+</html>
