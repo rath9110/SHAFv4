@@ -1,9 +1,5 @@
 {
   "name": "your-extension",
   "version": "1.0.0",
-  "private": true,
-  "scripts": {
-    "build:config": "node build-config.js",
-    "build": "npm run build:config && echo \"Build complete\""
-  }
+  "private": true
 }
