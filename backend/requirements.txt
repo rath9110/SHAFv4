@@ -1,0 +1,8 @@
+fastapi
+uvicorn
+requests
+selenium
+webdriver-manager
+beautifulsoup4
+zeep
+lxml
