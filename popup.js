@@ -123,7 +123,7 @@ async function fetchRelatedProducts(searchTerm, pageKey) {
     searchResults.innerHTML = `<p> Searching for "${searchTerm}"...</p>`;
 
     try {
-        const response = await fetch(`http://127.0.0.1:8000/related-products?product_name=${encodeURIComponent(searchTerm)}`, {
+        const response = await fetch(`https://sha-fv4.vercel.app/related-products?product_name=${encodeURIComponent(searchTerm)}`, {
             method: "GET",
             headers: { "Content-Type": "application/json" }
         });
