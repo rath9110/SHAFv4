@@ -99,15 +99,16 @@ def fetch_tradera_results(query: str):
 
 def get_driver():
     options = Options()
-    options.add_argument("--headless=new")  # modern headless
+    options.add_argument("--headless=new")
     options.add_argument("--no-sandbox")
     options.add_argument("--disable-dev-shm-usage")
+    options.add_argument("--disable-gpu")
+    options.add_argument("--window-size=1280,800")
     options.add_argument("--disable-blink-features=AutomationControlled")
-    # if Chrome isn’t on PATH, set binary:
-    # options.binary_location = "/usr/bin/google-chrome"
 
-    service = Service(ChromeDriverManager().install())
-    return webdriver.Chrome(service=service, options=options)
+    options.binary_location = "/usr/bin/chromium"
+    driver = webdriver.Chrome(options=options)
+    return driver
 
 def fetch_blocket_results(query: str):
     """Fetches relevant listings from Blocket by scraping the website."""
