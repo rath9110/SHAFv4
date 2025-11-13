@@ -127,6 +127,8 @@ async function fetchRelatedProducts(searchTerm, pageKey) {
             method: "GET",
             headers: { "Content-Type": "application/json" }
         });
+        console.log('https://https://shafv4-production.up.railway.app/related-products?product_name=' + encodeURIComponent(searchTerm));
+        console.log(response.body)
 
         console.log(`[Popup] Response received from fetching service. Status: ${response.status}`);
 
