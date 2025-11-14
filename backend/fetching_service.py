@@ -37,11 +37,6 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-# Tradera API Credentials
-TRADERA_API_URL = "https://api.tradera.com/v3/SearchService.asmx?WSDL"
-TRADERA_APP_ID = "5291"
-TRADERA_APP_KEY = "a630f8fc-053b-46d3-80ec-1eb73880a639" 
-
 # Initialize SOAP client
 client = Client(TRADERA_API_URL)
 
@@ -141,8 +136,8 @@ def fetch_blocket_results(query: str):
     return items
 
 def fetch_vinted_results(query: str):
-    """Fetches relevant listings from Blocket by scraping the website."""
-    logging.info(f"[Backend] Fetching Blocket results for query: {query}")
+    """Fetches relevant listings from Vinted by scraping the website."""
+    logging.info(f"[Backend] Fetching vinted results for query: {query}")
     driver = get_driver()
     url = f"https://www.vinted.se/catalog?search_text={query}"
     driver.get(url)
