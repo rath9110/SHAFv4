@@ -4,7 +4,7 @@ let lastDetectedProduct = "";
 
 function cleanProductTitle(title) {
     const stopWords = [
-        "and", "or", "between", "with", "without", "the", "a", "an", "for", "to", "of", "in", "on", "by", "med", ",", ".", "Apple", "Samsung"
+        "and", "or", "between", "with", "without", "the", "a", "an", "for", "to", "of", "in", "on", "by", "med", ",", ".", "Apple", "Samsung", "smartphone"
     ];
 
     return title
