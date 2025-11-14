@@ -123,11 +123,11 @@ async function fetchRelatedProducts(searchTerm, pageKey) {
     searchResults.innerHTML = `<p> Searching for "${searchTerm}"...</p>`;
 
     try {
-        const response = await fetch(`https://https://shafv4-production.up.railway.app/related-products?product_name=${encodeURIComponent(searchTerm)}`, {
+        const response = await fetch(`https://shafv4-production.up.railway.app/related-products?product_name=${encodeURIComponent(searchTerm)}`, {
             method: "GET",
             headers: { "Content-Type": "application/json" }
         });
-        console.log('https://https://shafv4-production.up.railway.app/related-products?product_name=' + encodeURIComponent(searchTerm));
+        console.log('https://shafv4-production.up.railway.app/related-products?product_name=' + encodeURIComponent(searchTerm));
         console.log(response.body)
 
         console.log(`[Popup] Response received from fetching service. Status: ${response.status}`);
