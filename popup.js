@@ -7,6 +7,12 @@ document.addEventListener("DOMContentLoaded", async () => {
     const traderaContainer = document.querySelector("#traderaResults .listings-container");
     const blocketContainer = document.querySelector("#blocketResults .listings-container");
 
+    const seeMoreTradera = document.getElementById("seeMoreTradera");
+    const seeMoreBlocket = document.getElementById("seeMoreBlocket");
+
+    seeMoreTradera.style.display = "inline-block";
+    seeMoreBlocket.style.display = "inline-block";
+
     // Get current tab URL to use as a key for storage
     const tab = await getCurrentTab();
     const pageKey = `page_${tab.url}`;  // Unique key per page
@@ -26,6 +32,7 @@ document.addEventListener("DOMContentLoaded", async () => {
         if (pageData.lastDetectedProduct) {
             detectedProduct.innerText = `Searching for: ${pageData.lastDetectedProduct}`;
             copyButton.style.display = "inline-block";
+            updateSeeMoreLinks(pageData.lastDetectedProduct);
         } else {
             detectedProduct.innerText = "No product detected yet...";
         }
@@ -65,6 +72,7 @@ document.addEventListener("DOMContentLoaded", async () => {
 
                     detectedProduct.innerText = `Searching for: ${trimmedTitle}`;
                     copyButton.style.display = "inline-block";
+                    updateSeeMoreLinks(trimmedTitle);
                     searchResults.innerHTML = `<p>Fetching related listings...</p>`;
                     fetchRelatedProducts(trimmedTitle, pageKey);
                 } else {
