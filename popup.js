@@ -130,6 +130,19 @@ async function fetchRelatedProducts(searchTerm, pageKey) {
 
     searchResults.innerHTML = `<p> Searching for "${searchTerm}"...</p>`;
 
+    const seeMoreTradera = document.getElementById("seeMoreTradera");
+    const seeMoreBlocket = document.getElementById("seeMoreBlocket");
+
+    const encoded = encodeURIComponent(searchTerm);
+    if (seeMoreTradera) {
+        seeMoreTradera.href = `https://www.tradera.com/search?q=${encoded}`;
+        console.log("[Popup] seeMoreTradera href set to:", seeMoreTradera.href);
+    }
+    if (seeMoreBlocket) {
+        seeMoreBlocket.href = `https://www.blocket.se/annonser/hela_sverige?q=${encoded}`;
+        console.log("[Popup] seeMoreBlocket href set to:", seeMoreBlocket.href);
+    }
+
     try {
         const response = await fetch(`https://shafv4-production.up.railway.app/related-products?product_name=${encodeURIComponent(searchTerm)}`, {
             method: "GET",
@@ -227,4 +240,25 @@ async function fetchRelatedProducts(searchTerm, pageKey) {
         console.error(`[Popup] Network error while fetching listings: ${error.message}`);
         searchResults.innerHTML = `<p>Error fetching listings: ${error.message}</p>`;
     }
+}
+
+function updateSeeMoreLinks(searchTerm) {
+    const seeMoreTradera = document.getElementById("seeMoreTradera");
+    const seeMoreBlocket = document.getElementById("seeMoreBlocket");
+
+    if (!seeMoreTradera || !seeMoreBlocket) {
+        console.warn("[Popup] See-more links not found in DOM");
+        return;
+    }
+
+    const encoded = encodeURIComponent(searchTerm);
+
+    // IMPORTANT: full absolute URLs with https://
+    seeMoreTradera.href = `https://www.tradera.com/search?q=${encoded}`;
+    seeMoreBlocket.href = `https://www.blocket.se/annonser/hela_sverige?q=${encoded}`;
+
+    console.log("[Popup] Updated see-more links:", {
+        tradera: seeMoreTradera.href,
+        blocket: seeMoreBlocket.href,
+    });
 }
