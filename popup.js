@@ -163,7 +163,7 @@ async function fetchRelatedProducts(searchTerm, pageKey) {
             return;
         }
 
-        //searchResults.innerHTML = "<p>Listings found:</p>";
+        searchResults.innerHTML = "<p>Listings found:</p>";
         traderaContainer.innerHTML = "";
         blocketContainer.innerHTML = "";
 
