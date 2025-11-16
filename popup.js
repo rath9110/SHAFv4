@@ -13,19 +13,16 @@ document.addEventListener("DOMContentLoaded", async () => {
     seeMoreTradera.style.display = "inline-block";
     seeMoreBlocket.style.display = "inline-block";
 
-    // Get current tab URL to use as a key for storage
     const tab = await getCurrentTab();
-    const pageKey = `page_${tab.url}`;  // Unique key per page
+    const pageKey = `page_${tab.url}`;
 
-    // Restore detected product and previous search results for the current page
     chrome.storage.local.get(["currentPage", pageKey], (data) => {
         const currentPage = data.currentPage;
 
-        // Clear results if user switched to a new page
         if (currentPage !== pageKey) {
             console.log(`[Popup] Page changed. Clearing old results.`);
             chrome.storage.local.set({ "currentPage": pageKey });
-            chrome.storage.local.remove([currentPage]);  // Remove old page data
+            chrome.storage.local.remove([currentPage]);
         }
 
         const pageData = data[pageKey] || {};
@@ -40,7 +37,7 @@ document.addEventListener("DOMContentLoaded", async () => {
         if (pageData.lastTraderaResults) {
             traderaContainer.innerHTML = pageData.lastTraderaResults;
         } else {
-            traderaContainer.innerHTML = ""; // Ensure old results are cleared
+            traderaContainer.innerHTML = "";
         }
 
         if (pageData.lastBlocketResults) {
@@ -166,7 +163,7 @@ async function fetchRelatedProducts(searchTerm, pageKey) {
             return;
         }
 
-        searchResults.innerHTML = "<p>Listings found:</p>";
+        //searchResults.innerHTML = "<p>Listings found:</p>";
         traderaContainer.innerHTML = "";
         blocketContainer.innerHTML = "";
 
