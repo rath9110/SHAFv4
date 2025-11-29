@@ -19,6 +19,10 @@ from fastapi import FastAPI, Query
 import logging
 import os
 from fastapi.middleware.cors import CORSMiddleware
+from dotenv import load_dotenv
+
+# Load environment variables from .env file
+load_dotenv()
 
 TRADERA_API_URL = os.environ.get("TRADERA_API_URL")
 TRADERA_APP_ID = os.environ.get("TRADERA_APP_ID")

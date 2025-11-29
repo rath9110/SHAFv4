@@ -8,3 +8,4 @@ zeep
 lxml
 pytest
 httpx
+python-dotenv
