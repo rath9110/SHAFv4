@@ -18,4 +18,5 @@ RUN pip install --upgrade pip && pip install -r requirements.txt
 COPY . .
 ENV PORT=8000
 EXPOSE 8000
-CMD ["uvicorn","fetching_service:app","--host","0.0.0.0","--port","8000"]
+# Use shell form to allow variable expansion
+CMD uvicorn fetching_service:app --host 0.0.0.0 --port ${PORT:-8000}
