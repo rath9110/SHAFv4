@@ -108,8 +108,14 @@ def get_driver():
     options.add_argument("--window-size=1280,800")
     options.add_argument("--disable-blink-features=AutomationControlled")
 
-    options.binary_location = "/usr/bin/chromium"
-    driver = webdriver.Chrome(options=options)
+    # Only set binary location if it exists (e.g., on Linux/Railway)
+    linux_binary_path = "/usr/bin/chromium"
+    if os.path.exists(linux_binary_path):
+        options.binary_location = linux_binary_path
+
+    # Use ChromeDriverManager to automatically install/locate the driver
+    service = Service(ChromeDriverManager().install())
+    driver = webdriver.Chrome(service=service, options=options)
     return driver
 
 def fetch_blocket_results(query: str):
