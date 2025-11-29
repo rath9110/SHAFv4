@@ -7,8 +7,11 @@ from selenium.webdriver.chrome.service import Service
 from selenium.webdriver.common.by import By
 from selenium.webdriver.chrome.options import Options
 from webdriver_manager.chrome import ChromeDriverManager
+from selenium.webdriver.support.ui import WebDriverWait
+from selenium.webdriver.support import expected_conditions as EC
 import time
 import random
+import asyncio
 from bs4 import BeautifulSoup
 from zeep import Client, xsd
 import shutil
@@ -31,10 +34,10 @@ app = FastAPI()
 # Allow CORS for frontend communication
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"],  # Change this to your frontend domain in production
+    allow_origins=["chrome-extension://<your-extension-id>", "http://localhost:3000"],  # Update with actual extension ID
     allow_credentials=True,
-    allow_methods=["*"],
-    allow_headers=["*"],
+    allow_methods=["GET", "POST", "OPTIONS"],
+    allow_headers=["Content-Type", "Authorization"],
 )
 
 # Initialize SOAP client
@@ -90,7 +93,7 @@ def fetch_tradera_results(query: str):
 
     except Exception as e:
         logging.error(f"[Backend] Tradera API call failed: {str(e)}")
-        return [{"error": f"Tradera API call failed: {str(e)}"}]
+        return [{"error": "An error occurred while fetching Tradera results."}]
 
 def get_driver():
     options = Options()
@@ -111,7 +114,14 @@ def fetch_blocket_results(query: str):
     driver = get_driver()
     url = f"https://www.blocket.se/annonser/hela_sverige?q={query}"
     driver.get(url)
-    time.sleep(random.uniform(2, 5))  # Allow JavaScript to load
+    
+    try:
+        # Wait for articles to load instead of hard sleep
+        WebDriverWait(driver, 10).until(
+            EC.presence_of_element_located((By.CSS_SELECTOR, "article"))
+        )
+    except Exception:
+        logging.warning(f"[Backend] Timeout waiting for Blocket results for {query}")
 
     soup = BeautifulSoup(driver.page_source, "html.parser")
     driver.quit()
@@ -141,7 +151,14 @@ def fetch_vinted_results(query: str):
     driver = get_driver()
     url = f"https://www.vinted.se/catalog?search_text={query}"
     driver.get(url)
-    time.sleep(random.uniform(2, 5))  # Allow JavaScript to load
+    
+    try:
+        # Wait for articles to load instead of hard sleep
+        WebDriverWait(driver, 10).until(
+            EC.presence_of_element_located((By.CSS_SELECTOR, "article"))
+        )
+    except Exception:
+        logging.warning(f"[Backend] Timeout waiting for Vinted results for {query}")
 
     soup = BeautifulSoup(driver.page_source, "html.parser")
     driver.quit()
@@ -166,16 +183,18 @@ def fetch_vinted_results(query: str):
     return items
 
 @app.get("/related-products")
-def get_related_products(product_name: str = Query(..., min_length=1)):
+async def get_related_products(product_name: str = Query(..., min_length=1)):
     """Handles incoming requests from the frontend to fetch related listings."""
     logging.info(f"[Backend] Received request for related products: {product_name}")
 
     try:
-        tradera_results = fetch_tradera_results(product_name)
-        logging.info("[Backend] Fetched Tradera results successfully.")
+        # Run fetching tasks in parallel
+        tradera_task = asyncio.to_thread(fetch_tradera_results, product_name)
+        blocket_task = asyncio.to_thread(fetch_blocket_results, product_name)
+        
+        tradera_results, blocket_results = await asyncio.gather(tradera_task, blocket_task)
 
-        blocket_results = fetch_blocket_results(product_name)
-        logging.info("[Backend] Fetched Blocket results successfully.")
+        logging.info("[Backend] Fetched results successfully.")
 
         return {
             "tradera": tradera_results,
@@ -183,7 +202,7 @@ def get_related_products(product_name: str = Query(..., min_length=1)):
         }
     except Exception as e:
         logging.error(f"[Backend] Error fetching related products: {str(e)}")
-        return {"error": str(e)}
+        return {"error": "An internal error occurred."}
 
 #Only use to run locally
 #if __name__ == "__main__":

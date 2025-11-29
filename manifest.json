@@ -2,15 +2,23 @@
   "manifest_version": 3,
   "name": "Second-Hand Finder",
   "version": "1.1",
-  "permissions": ["activeTab", "scripting", "storage"],
-  "host_permissions": ["<all_urls>"],
+  "permissions": [
+    "activeTab",
+    "scripting",
+    "storage"
+  ],
+  "host_permissions": [
+    "*://*.tradera.com/*",
+    "*://*.blocket.se/*",
+    "*://*.vinted.se/*"
+  ],
   "background": {
     "service_worker": "background.js"
   },
-"action": {
+  "action": {
     "default_popup": "popup.html",
     "default_icon": "icons/icon.png",
     "default_width": 600,
     "default_height": 600
-}
+  }
 }

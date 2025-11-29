@@ -1,6 +1,6 @@
 document.addEventListener("DOMContentLoaded", async () => {
     console.log("Popup loaded!");
-    
+
     const detectedProduct = document.getElementById("detectedProduct");
     const copyButton = document.getElementById("copyProductName");
     const searchResults = document.getElementById("searchResults");
@@ -125,7 +125,7 @@ function trimProductName(name) {
 async function fetchRelatedProducts(searchTerm, pageKey) {
     console.log(`[Popup] Sending request to fetching service for: "${searchTerm}"`);
 
-    searchResults.innerHTML = `<p> Searching for "${searchTerm}"...</p>`;
+    searchResults.textContent = `Searching for "${searchTerm}"...`;
 
     const seeMoreTradera = document.getElementById("seeMoreTradera");
     const seeMoreBlocket = document.getElementById("seeMoreBlocket");
@@ -159,7 +159,7 @@ async function fetchRelatedProducts(searchTerm, pageKey) {
 
         if (data.error) {
             console.error(`[Popup] Error in response: ${data.error}`);
-            searchResults.innerHTML = `<p>Error: ${data.error}</p>`;
+            searchResults.textContent = `Error: ${data.error}`;
             return;
         }
 
@@ -235,7 +235,7 @@ async function fetchRelatedProducts(searchTerm, pageKey) {
 
     } catch (error) {
         console.error(`[Popup] Network error while fetching listings: ${error.message}`);
-        searchResults.innerHTML = `<p>Error fetching listings: ${error.message}</p>`;
+        searchResults.textContent = `Error fetching listings: ${error.message}`;
     }
 }
 

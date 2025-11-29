@@ -6,3 +6,5 @@ webdriver-manager
 beautifulsoup4
 zeep
 lxml
+pytest
+httpx
