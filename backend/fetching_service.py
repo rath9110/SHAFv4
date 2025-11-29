@@ -110,11 +110,16 @@ def get_driver():
 
     # Only set binary location if it exists (e.g., on Linux/Railway)
     linux_binary_path = "/usr/bin/chromium"
-    if os.path.exists(linux_binary_path):
+    linux_driver_path = "/usr/bin/chromedriver"
+    
+    if os.path.exists(linux_binary_path) and os.path.exists(linux_driver_path):
+        # In Docker/Railway: Use installed chromium and chromedriver
         options.binary_location = linux_binary_path
+        service = Service(executable_path=linux_driver_path)
+    else:
+        # Local Development: Use ChromeDriverManager
+        service = Service(ChromeDriverManager().install())
 
-    # Use ChromeDriverManager to automatically install/locate the driver
-    service = Service(ChromeDriverManager().install())
     driver = webdriver.Chrome(service=service, options=options)
     return driver
 

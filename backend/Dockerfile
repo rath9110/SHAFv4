@@ -7,6 +7,7 @@ ENV PYTHONDONTWRITEBYTECODE=1 \
 # Install Chromium only (no chromedriver)
 RUN apt-get update && apt-get install -y --no-install-recommends \
     chromium \
+    chromium-driver \
     fonts-liberation fonts-dejavu-core fonts-noto-color-emoji \
     ca-certificates curl unzip \
  && rm -rf /var/lib/apt/lists/*
