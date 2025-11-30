@@ -44,8 +44,7 @@ async def startup_event():
 # Allow CORS for frontend communication
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"],  # Allow specific IP
-    allow_origin_regex="*",  # Allow all Chrome extensions
+    allow_origins=["*"],  # Allow all origins
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
