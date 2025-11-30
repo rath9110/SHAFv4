@@ -204,8 +204,11 @@ def fetch_blocket_results(query: str):
         price_element = item.select_one("div[class*='Price']")
         price = price_element.text.strip() if price_element else "No price found"
 
-        link_element = item.select_one("a")
-        link = "https://www.blocket.se" + link_element["href"] if link_element else "No link found"
+        if link_element:
+            href = link_element["href"]
+            link = href if href.startswith("http") else f"https://www.blocket.se{href}"
+        else:
+            link = "No link found"
 
         image_element = item.select_one("img")
         image = image_element["src"] if image_element else ""
@@ -241,8 +244,11 @@ def fetch_vinted_results(query: str):
         price_element = item.select_one("div[class*='Price']")
         price = price_element.text.strip() if price_element else "No price found"
 
-        link_element = item.select_one("a")
-        link = "https://www.blocket.se" + link_element["href"] if link_element else "No link found"
+        if link_element:
+            href = link_element["href"]
+            link = href if href.startswith("http") else f"https://www.vinted.se{href}"
+        else:
+            link = "No link found"
 
         image_element = item.select_one("img")
         image = image_element["src"] if image_element else ""
