@@ -44,7 +44,7 @@ async def startup_event():
 app.add_middleware(
     CORSMiddleware,
     allow_origins=["http://94.255.240.88", "https://94.255.240.88"],  # Allow specific IP
-    allow_origin_regex=["chrome-extension://.*", "chrome-extension:///*"],  # Allow all Chrome extensions
+    allow_origin_regex="chrome-extension://.*",  # Allow all Chrome extensions
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
