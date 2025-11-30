@@ -9,6 +9,7 @@ from selenium.webdriver.chrome.options import Options
 from webdriver_manager.chrome import ChromeDriverManager
 import time
 import random
+import asyncio  # Added for controlled parallel execution
 from bs4 import BeautifulSoup
 from zeep import Client, xsd
 import shutil
@@ -49,6 +50,14 @@ app.add_middleware(
     allow_methods=["*"],
     allow_headers=["*"],
 )
+
+# Global semaphore to limit concurrent Selenium instances (max 1 Chrome at a time)
+selenium_semaphore = asyncio.Semaphore(1)
+
+async def fetch_with_selenium_limit(fetch_func, query: str):
+    """Wrapper to control Selenium instance execution with semaphore."""
+    async with selenium_semaphore:
+        return await asyncio.to_thread(fetch_func, query)
 
 # Initialize SOAP client lazily to avoid startup crashes
 _soap_client = None
@@ -262,16 +271,20 @@ def fetch_vinted_results(query: str):
     return items
 
 @app.get("/related-products")
-def get_related_products(product_name: str = Query(..., min_length=1)):
+async def get_related_products(product_name: str = Query(..., min_length=1)):
     """Handles incoming requests from the frontend to fetch related listings."""
     logging.info(f"[Backend] Received request for related products: {product_name}")
 
     try:
-        tradera_results = fetch_tradera_results(product_name)
-        logging.info("[Backend] Fetched Tradera results successfully.")
-
-        blocket_results = fetch_blocket_results(product_name)
-        logging.info("[Backend] Fetched Blocket results successfully.")
+        # Run fetching with controlled parallelism:
+        # - Tradera (API call, no Selenium) runs freely
+        # - Blocket (Selenium) limited by semaphore
+        tradera_task = asyncio.to_thread(fetch_tradera_results, product_name)
+        blocket_task = fetch_with_selenium_limit(fetch_blocket_results, product_name)
+        
+        tradera_results, blocket_results = await asyncio.gather(tradera_task, blocket_task)
+        
+        logging.info("[Backend] Fetched all results successfully.")
 
         return {
             "tradera": tradera_results,
