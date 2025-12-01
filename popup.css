@@ -1,13 +1,16 @@
 /* ===================================
    RESET & BASE STYLES
    =================================== */
-*, *::before, *::after {
+*,
+*::before,
+*::after {
     box-sizing: border-box;
     margin: 0;
     padding: 0;
 }
 
-html, body {
+html,
+body {
     width: 360px;
     min-height: 600px;
     max-height: 650px;
@@ -17,8 +20,10 @@ html, body {
 
 body {
     font-family: "Inter", system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
-    background-color: #F6F3EC; /* Warm off-white beige */
-    color: #2A2A2A; /* Primary text */
+    background-color: #F6F3EC;
+    /* Warm off-white beige */
+    color: #2A2A2A;
+    /* Primary text */
     font-size: 13px;
     line-height: 1.5;
     -webkit-font-smoothing: antialiased;
@@ -59,14 +64,16 @@ body {
 .header-title {
     font-size: 17px;
     font-weight: 600;
-    color: #6BA58F; /* Sage green */
+    color: #6BA58F;
+    /* Sage green */
     letter-spacing: 0.3px;
     margin-bottom: 4px;
 }
 
 .header-subtitle {
     font-size: 12px;
-    color: #7A7A7A; /* Secondary text */
+    color: #7A7A7A;
+    /* Secondary text */
     font-weight: 400;
 }
 
@@ -74,7 +81,8 @@ body {
    DETECTED PRODUCT (PILL-STYLE)
    =================================== */
 .product-pill {
-    background: #F3EEE4; /* Very light neutral */
+    background: #F3EEE4;
+    /* Very light neutral */
     border-radius: 9999px;
     padding: 10px 16px;
     display: flex;
@@ -114,7 +122,8 @@ body {
     width: 32px;
     height: 32px;
     border-radius: 9999px;
-    border: 1px solid #D9E3DA; /* Secondary accent */
+    border: 1px solid #D9E3DA;
+    /* Secondary accent */
     background: #FFFFFF;
     display: flex;
     align-items: center;
@@ -167,8 +176,13 @@ body {
 }
 
 @keyframes spin {
-    0% { transform: rotate(0deg); }
-    100% { transform: rotate(360deg); }
+    0% {
+        transform: rotate(0deg);
+    }
+
+    100% {
+        transform: rotate(360deg);
+    }
 }
 
 /* ===================================
@@ -248,7 +262,10 @@ body {
     border-radius: 12px;
     border: 1px solid #E3DAC5;
     transition: background-color 0.15s ease, border-color 0.15s ease, transform 0.1s ease;
-    overflow-x: hidden;
+    overflow: hidden;
+    /* Changed from overflow-x: hidden */
+    min-width: 0;
+    /* Important for flex children to properly truncate */
 }
 
 .listing:hover {
@@ -264,6 +281,10 @@ body {
     color: inherit;
     width: 100%;
     gap: 10px;
+    min-width: 0;
+    /* Important for flex children to properly truncate */
+    overflow: hidden;
+    /* Ensure the link container doesn't overflow */
 }
 
 .listing img {
@@ -283,6 +304,8 @@ body {
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;
+    min-width: 0;
+    /* Critical for text truncation in flex */
 }
 
 .listing p {
@@ -291,6 +314,8 @@ body {
     color: #6BA58F;
     flex-shrink: 0;
     margin-left: 8px;
+    white-space: nowrap;
+    /* Prevent price from wrapping */
 }
 
 /* ===================================
@@ -301,7 +326,8 @@ body {
     width: fit-content;
     margin: 0 auto;
     padding: 10px 20px;
-    background-color: #6BA58F; /* Sage green */
+    background-color: #6BA58F;
+    /* Sage green */
     color: #FFFFFF;
     font-size: 12px;
     font-weight: 500;
@@ -315,7 +341,8 @@ body {
 }
 
 .pill-button:hover {
-    background-color: #5A9278; /* Slightly darker green */
+    background-color: #5A9278;
+    /* Slightly darker green */
     box-shadow: 0 4px 10px rgba(107, 165, 143, 0.25);
     transform: translateY(-1px);
 }
@@ -331,7 +358,7 @@ body {
     .popup-wrapper {
         padding: 16px 14px;
     }
-    
+
     .main-card {
         padding: 20px;
     }
