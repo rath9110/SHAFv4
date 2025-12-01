@@ -214,47 +214,6 @@ body {
 
 .marketplace-name {
     font-size: 13px;
-    font-weight: 600;
-    color: #2A2A2A;
-    margin-bottom: 10px;
-}
-
-/* ===================================
-   LISTINGS CONTAINER
-   =================================== */
-.listings-container {
-    display: flex;
-    flex-direction: column;
-    gap: 8px;
-    max-height: 200px;
-    overflow-y: auto;
-    overflow-x: hidden;
-    margin-bottom: 12px;
-}
-
-/* Scrollbar styling (minimal) */
-.listings-container::-webkit-scrollbar {
-    width: 4px;
-}
-
-.listings-container::-webkit-scrollbar-track {
-    background: #F6F3EC;
-    border-radius: 9999px;
-}
-
-.listings-container::-webkit-scrollbar-thumb {
-    background: #D9E3DA;
-    border-radius: 9999px;
-}
-
-.listings-container::-webkit-scrollbar-thumb:hover {
-    background: #6BA58F;
-}
-
-/* ===================================
-   INDIVIDUAL LISTING
-   =================================== */
-.listing {
     display: flex;
     align-items: center;
     background: #FCFAF7;
