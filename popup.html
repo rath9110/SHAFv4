@@ -1,44 +1,69 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Second-Hand Finder</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="popup.css">
     <script src="popup.js" defer></script>
 </head>
+
 <body>
-    <div id="popupContainer">
-        <h1>Second-Hand Finder</h1>
+    <div class="popup-wrapper">
+        <div id="popupContainer" class="main-card">
+            <!-- Header -->
+            <header class="header">
+                <h1 class="header-title">Second-Hand Finder</h1>
+                <p class="header-subtitle">Find pre-loved alternatives</p>
+            </header>
 
-        <div id="productContainer">
-            <p id="detectedProduct">No product detected yet...</p>
-            <button id="copyProductName" title="Copy to clipboard">
-                <img src="icons/copy_icon.png" alt="Copy" id="copyIcon">
-            </button>
-        </div>
-
-        <div id="searchResults">
-            <p>Searching for listings...</p>
-            <div id="loader"></div> <!-- Loader element -->
-        </div>
-
-        <!-- New section for displaying listings from Tradera & Blocket -->
-        <div id="relatedProducts">
-            <h2>Related Listings</h2>
-            <div id="traderaResults">
-                <h3>Tradera</h3>
-                <div class="listings-container" id="traderaContainer"></div>
-                <a id="seeMoreTradera" class="see-more-button" href="#" target="_blank">See more on Tradera</a>
+            <!-- Detected Product Section -->
+            <div id="productContainer" class="product-pill">
+                <div class="product-info">
+                    <span class="product-label">Searching for:</span>
+                    <p id="detectedProduct" class="product-name">No product detected yet...</p>
+                </div>
+                <button id="copyProductName" class="copy-button" title="Copy to clipboard">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none"
+                        stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect>
+                        <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path>
+                    </svg>
+                </button>
             </div>
-            
-            <div id="blocketResults">
-                <h3>Blocket</h3>
-                <div class="listings-container" id="blocketContainer"></div>
-                <a id="seeMoreBlocket" class="see-more-button" href="#" target="_blank">See more on Blocket</a>
+
+            <!-- Hidden elements for JavaScript compatibility -->
+            <div id="searchResults" style="display: none;">
+                <p class="status-text"></p>
+                <div id="loader" class="loader"></div>
             </div>
-                      
+
+            <!-- Related Listings Section -->
+            <div id="relatedProducts" class="related-section">
+                <!-- Tradera -->
+                <div id="traderaResults" class="marketplace-group">
+                    <h3 class="marketplace-name">Tradera</h3>
+                    <div class="listings-container" id="traderaContainer"></div>
+                    <a id="seeMoreTradera" class="pill-button" href="#" target="_blank">
+                        See more on Tradera
+                    </a>
+                </div>
+
+                <!-- Blocket -->
+                <div id="blocketResults" class="marketplace-group">
+                    <h3 class="marketplace-name">Blocket</h3>
+                    <div class="listings-container" id="blocketContainer"></div>
+                    <a id="seeMoreBlocket" class="pill-button" href="#" target="_blank">
+                        See more on Blocket
+                    </a>
+                </div>
+            </div>
         </div>
     </div>
 </body>
+
 </html>
