@@ -1,20 +1,3 @@
-/* ===================================
-   RESET & BASE STYLES
-   =================================== */
-*,
-*::before,
-/* Warm off-white beige */
-color: #2A2A2A;
-/* Primary text */
-font-size: 13px;
-line-height: 1.5;
--webkit-font-smoothing: antialiased;
--moz-osx-font-smoothing: grayscale;
-}
-
-/* ===================================
-   POPUP WRAPPER & MAIN CARD
-   =================================== */
 .popup-wrapper {
     display: flex;
     align-items: flex-start;
