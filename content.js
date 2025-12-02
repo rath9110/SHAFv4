@@ -40,7 +40,7 @@ function detectProductPage() {
                 console.log(`New Product Title Detected: ${productTitle}`);
 
                 lastDetectedProduct = productTitle;
-                
+
                 chrome.storage.local.set({ "lastDetectedProduct": productTitle }, () => {
                     chrome.runtime.sendMessage({ type: "product_detected", title: productTitle });
                 });
@@ -70,7 +70,16 @@ chrome.storage.local.get("lastDetectedProduct", (data) => {
 
 detectProductPage();
 
+// Re-detect product when user switches back to this tab
+document.addEventListener("visibilitychange", () => {
+    if (!document.hidden) {
+        console.log("Tab became visible, re-detecting product...");
+        detectProductPage();
+    }
+});
+
 setInterval(() => {
     console.log("Checking for product name update...");
     detectProductPage();
 }, 2000);
+
