@@ -83,10 +83,6 @@ document.addEventListener("DOMContentLoaded", async () => {
                     updateSeeMoreLinks(trimmedTitle);
                     searchResults.innerHTML = `<p>Fetching related listings...</p>`;
 
-                    // Clear old results immediately to prevent stale data from showing
-                    traderaContainer.innerHTML = "";
-                    blocketContainer.innerHTML = "";
-
                     fetchRelatedProducts(trimmedTitle, pageKey).finally(() => {
                         isFetching = false;
                     });
