@@ -200,6 +200,7 @@ async function fetchRelatedProducts(searchTerm, pageKey) {
         if (data.tradera && data.tradera.length > 0) {
             console.log(`[Popup] Updating Tradera listings.`);
             data.tradera.forEach(item => {
+                if (!item.title || !item.price || !item.link) return; // Skip invalid items
                 let listing = createListing(item);
                 traderaContainer.appendChild(listing);
                 traderaHTML += listing.outerHTML;
@@ -213,6 +214,7 @@ async function fetchRelatedProducts(searchTerm, pageKey) {
         if (data.blocket && data.blocket.length > 0) {
             console.log(`[Popup] Updating Blocket listings.`);
             data.blocket.forEach(item => {
+                if (!item.title || !item.price || !item.link) return; // Skip invalid items
                 let listing = createListing(item);
                 blocketContainer.appendChild(listing);
                 blocketHTML += listing.outerHTML;
