@@ -71,6 +71,11 @@ document.addEventListener("DOMContentLoaded", async () => {
                     copyButton.style.display = "inline-block";
                     updateSeeMoreLinks(trimmedTitle);
                     searchResults.innerHTML = `<p>Fetching related listings...</p>`;
+
+                    // Clear old results immediately to prevent stale data from showing
+                    traderaContainer.innerHTML = "";
+                    blocketContainer.innerHTML = "";
+
                     fetchRelatedProducts(trimmedTitle, pageKey);
                 } else {
                     console.log("[Popup] Product already detected with stored results. No new request sent.");
