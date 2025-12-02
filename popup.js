@@ -58,14 +58,22 @@ document.addEventListener("DOMContentLoaded", async () => {
             let trimmedTitle = trimProductName(message.title);
             console.log(`Updating Popup: ${trimmedTitle}`);
 
+            // Check if already fetching the same product
+            if (isFetching && currentSearchTerm === trimmedTitle) {
+                console.log("[Popup] Already fetching this product. Ignoring duplicate message.");
+                return;
+            }
+
             chrome.storage.local.get([pageKey], (data) => {
                 let pageData = data[pageKey] || {};
 
-                // Only fetch if the detected product is new or no results exist for this page
-                if (!pageData.lastDetectedProduct || pageData.lastDetectedProduct !== trimmedTitle ||
-                    !pageData.lastTraderaResults || !pageData.lastBlocketResults) {
+                // Only fetch if the detected product is actually new
+                if (!pageData.lastDetectedProduct || pageData.lastDetectedProduct !== trimmedTitle) {
 
-                    console.log("[Popup] Detected new product or missing results. Fetching new data...");
+                    console.log("[Popup] Detected new product. Fetching new data...");
+
+                    isFetching = true;
+                    currentSearchTerm = trimmedTitle;
 
                     pageData.lastDetectedProduct = trimmedTitle;
                     chrome.storage.local.set({ [pageKey]: pageData });
@@ -79,7 +87,9 @@ document.addEventListener("DOMContentLoaded", async () => {
                     traderaContainer.innerHTML = "";
                     blocketContainer.innerHTML = "";
 
-                    fetchRelatedProducts(trimmedTitle, pageKey);
+                    fetchRelatedProducts(trimmedTitle, pageKey).finally(() => {
+                        isFetching = false;
+                    });
                 } else {
                     console.log("[Popup] Product already detected with stored results. No new request sent.");
                 }
