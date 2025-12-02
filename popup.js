@@ -210,6 +210,10 @@ async function fetchRelatedProducts(searchTerm, pageKey) {
             return listingDiv;
         }
 
+        // Clear containers right before adding new results
+        traderaContainer.innerHTML = "";
+        blocketContainer.innerHTML = "";
+
         let traderaHTML = "";
         let blocketHTML = "";
 
