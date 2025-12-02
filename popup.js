@@ -49,6 +49,9 @@ document.addEventListener("DOMContentLoaded", async () => {
 
     injectContentScript();
 
+    let isFetching = false;
+    let currentSearchTerm = "";
+
     chrome.runtime.onMessage.addListener((message) => {
         console.log("Received message:", message);
         if (message.type === "product_detected") {
