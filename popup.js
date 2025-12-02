@@ -182,8 +182,6 @@ async function fetchRelatedProducts(searchTerm, pageKey) {
         }
 
         searchResults.innerHTML = "<p>Listings found:</p>";
-        traderaContainer.innerHTML = "";
-        blocketContainer.innerHTML = "";
 
         function createListing(item) {
             const listingDiv = document.createElement("div");
