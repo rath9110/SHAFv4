@@ -64,6 +64,12 @@ document.addEventListener("DOMContentLoaded", async () => {
                 return;
             }
 
+            // Check if this product is already displayed (prevent any redundant processing)
+            if (!isFetching && currentSearchTerm === trimmedTitle) {
+                console.log("[Popup] This product is already displayed. Ignoring duplicate message.");
+                return;
+            }
+
             chrome.storage.local.get([pageKey], (data) => {
                 let pageData = data[pageKey] || {};
 
