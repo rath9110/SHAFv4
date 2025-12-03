@@ -1,4 +1,4 @@
-console.log("Content script injected and running!");
+console.log("Content script injected and running! [Version: Tab-Switch-Fix-v2]");
 
 let lastDetectedProduct = "";
 
