@@ -54,20 +54,7 @@ function detectProductPage() {
     console.log("No product title found.");
 }
 
-// Restore last detected product if available, but ignore test product names
-chrome.storage.local.get("lastDetectedProduct", (data) => {
-    if (data.lastDetectedProduct && data.lastDetectedProduct.trim().length > 0) {
-        if (!data.lastDetectedProduct.toLowerCase().includes("test product name")) {
-            lastDetectedProduct = data.lastDetectedProduct;
-            console.log(`Restored last detected product: ${lastDetectedProduct}`);
-            chrome.runtime.sendMessage({ type: "product_detected", title: lastDetectedProduct });
-        } else {
-            console.warn("Skipping restoration of test product name.");
-            chrome.storage.local.remove("lastDetectedProduct");
-        }
-    }
-});
-
+// Run initial detection when page loads
 detectProductPage();
 
 // Re-detect product when user switches back to this tab
