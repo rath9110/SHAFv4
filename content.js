@@ -75,6 +75,13 @@ document.addEventListener("visibilitychange", () => {
     if (!document.hidden) {
         console.log("Tab became visible, re-detecting product...");
         detectProductPage();
+
+        // Force send message even if product hasn't changed
+        // This ensures popup updates when switching back to the tab
+        if (lastDetectedProduct) {
+            console.log(`Sending product message on tab visibility: ${lastDetectedProduct}`);
+            chrome.runtime.sendMessage({ type: "product_detected", title: lastDetectedProduct });
+        }
     }
 });
 
