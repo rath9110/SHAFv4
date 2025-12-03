@@ -1,7 +1,7 @@
 {
   "manifest_version": 3,
   "name": "Second-Hand Finder",
-  "version": "1.1",
+  "version": "2.0",
   "permissions": [
     "activeTab",
     "scripting",
@@ -9,8 +9,7 @@
   ],
   "host_permissions": [
     "*://*.tradera.com/*",
-    "*://*.blocket.se/*",
-    "*://*.vinted.se/*"
+    "*://*.blocket.se/*"
   ],
   "content_scripts": [
     {
