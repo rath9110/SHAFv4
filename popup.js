@@ -47,6 +47,17 @@ document.addEventListener("DOMContentLoaded", async () => {
         }
     });
 
+    // Request current product from content script when popup opens
+    chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
+        if (tabs[0]) {
+            chrome.tabs.sendMessage(tabs[0].id, { type: "request_product" }, (response) => {
+                if (chrome.runtime.lastError) {
+                    console.log("[Popup] Content script not ready or no response:", chrome.runtime.lastError.message);
+                }
+            });
+        }
+    });
+
     let isFetching = false;
     let currentSearchTerm = "";
 

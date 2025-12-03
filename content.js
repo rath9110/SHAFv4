@@ -72,6 +72,22 @@ document.addEventListener("visibilitychange", () => {
     }
 });
 
+// Listen for requests from popup
+chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
+    if (message.type === "request_product") {
+        console.log("[Content] Popup requested current product");
+        if (lastDetectedProduct) {
+            console.log(`[Content] Sending current product: ${lastDetectedProduct}`);
+            chrome.runtime.sendMessage({ type: "product_detected", title: lastDetectedProduct });
+        } else {
+            console.log("[Content] No product detected yet, running detection...");
+            detectProductPage();
+        }
+        sendResponse({ received: true });
+        return true;
+    }
+});
+
 setInterval(() => {
     console.log("Checking for product name update...");
     detectProductPage();
