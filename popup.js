@@ -47,8 +47,6 @@ document.addEventListener("DOMContentLoaded", async () => {
         }
     });
 
-    injectContentScript();
-
     let isFetching = false;
     let currentSearchTerm = "";
 
@@ -105,24 +103,6 @@ document.addEventListener("DOMContentLoaded", async () => {
         });
     });
 });
-
-function injectContentScript() {
-    console.log("Injecting content script...");
-    chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
-        if (tabs.length === 0) {
-            console.error("No active tab found.");
-            return;
-        }
-        chrome.scripting.executeScript({
-            target: { tabId: tabs[0].id },
-            files: ["content.js"]
-        }).then(() => {
-            console.log("Content script injected successfully.");
-        }).catch(err => {
-            console.error("Error injecting content script:", err);
-        });
-    });
-}
 
 async function getCurrentTab() {
     return new Promise((resolve) => {
