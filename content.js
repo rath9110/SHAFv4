@@ -17,6 +17,11 @@ function detectProductPage() {
     console.log("Running product detection...");
 
     let productTitleSelectors = [
+        // Elgiganten-specific selectors (prioritized)
+        "h1[data-testid='product-title']",
+        "h1.product-title",
+        "[data-testid='product-name']",
+        // Generic selectors
         "h1", ".product-title", "#productTitle", ".page-title",
         ".product-name", ".title-1", ".pdp-title", "h1 span",
         "[itemprop='name']", "[data-product-name]", "[data-test='product-title']",
@@ -47,15 +52,33 @@ function detectProductPage() {
             } else {
                 console.log("Product title unchanged, skipping update.");
             }
-            return;
+            return true; // Product found
         }
     }
 
     console.log("No product title found.");
+    return false; // No product found
 }
 
-// Run initial detection when page loads
-detectProductPage();
+// Run initial detection with retries for dynamically loaded content
+let retryCount = 0;
+const maxRetries = 8; // Try for 4 seconds (8 x 500ms)
+
+function attemptDetection() {
+    const found = detectProductPage();
+
+    if (!found && retryCount < maxRetries) {
+        retryCount++;
+        console.log(`[Content] Product not found, retrying (${retryCount}/${maxRetries})...`);
+        setTimeout(attemptDetection, 500);
+    } else if (found) {
+        console.log("[Content] ✓ Product detected successfully!");
+    } else {
+        console.log("[Content] ✗ No product found after retries");
+    }
+}
+
+attemptDetection();
 
 // Re-detect product when user switches back to this tab
 document.addEventListener("visibilitychange", () => {
