@@ -9,7 +9,9 @@
   ],
   "host_permissions": [
     "*://*.tradera.com/*",
-    "*://*.blocket.se/*"
+    "*://*.blocket.se/*",
+    "*://*.ebay.com/*",
+    "*://*.ebay.se/*"
   ],
   "content_scripts": [
     {
