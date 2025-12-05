@@ -27,7 +27,8 @@ TRADERA_APP_KEY = os.environ.get("TRADERA_APP_KEY")
 # eBay API Configuration
 EBAY_APP_ID = os.environ.get("EBAY_APP_ID")
 EBAY_CERT_ID = os.environ.get("EBAY_CERT_ID")
-EBAY_SITE_ID = os.environ.get("EBAY_SITE_ID", "71")  # Default to Sweden (71)
+EBAY_GLOBAL_ID = os.environ.get("EBAY_GLOBAL_ID", "EBAY-DE")  # Default to Germany (closest to Sweden)
+
 
 # Configure logging
 logging.basicConfig(level=logging.INFO, format="%(asctime)s - %(levelname)s - %(message)s")
@@ -39,7 +40,7 @@ logging.info(f"[Backend] PORT environment variable: {os.environ.get('PORT', 'NOT
 logging.info(f"[Backend] Tradera API URL configured: {bool(TRADERA_API_URL)}")
 logging.info(f"[Backend] Tradera credentials configured: {bool(TRADERA_APP_ID and TRADERA_APP_KEY)}")
 logging.info(f"[Backend] eBay credentials configured: {bool(EBAY_APP_ID)}")
-logging.info(f"[Backend] eBay Site ID: {EBAY_SITE_ID}")
+logging.info(f"[Backend] eBay Global ID: {EBAY_GLOBAL_ID}")
 
 app = FastAPI()
 
@@ -291,8 +292,7 @@ def fetch_ebay_results(query: str):
         # Initialize eBay Finding API client
         api = Finding(
             appid=EBAY_APP_ID,
-            config_file=None,
-            siteid=EBAY_SITE_ID
+            config_file=None
         )
         
         # Search for items
@@ -306,8 +306,9 @@ def fetch_ebay_results(query: str):
             'itemFilter': [
                 {'name': 'ListingType', 'value': ['FixedPrice', 'Auction']},
                 {'name': 'Condition', 'value': 'Used'}
-            ]
-        })
+            ],
+            'outputSelector': ['StoreInfo']
+        }, global_id=EBAY_GLOBAL_ID)
         
         # Parse results
         items = []
