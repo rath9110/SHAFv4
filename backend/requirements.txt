@@ -9,3 +9,4 @@ lxml
 pytest
 httpx
 python-dotenv
+ebaysdk
