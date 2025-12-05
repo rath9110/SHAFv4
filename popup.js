@@ -6,12 +6,15 @@ document.addEventListener("DOMContentLoaded", async () => {
     const searchResults = document.getElementById("searchResults");
     const traderaContainer = document.querySelector("#traderaResults .listings-container");
     const blocketContainer = document.querySelector("#blocketResults .listings-container");
+    const ebayContainer = document.querySelector("#ebayResults .listings-container");
 
     const seeMoreTradera = document.getElementById("seeMoreTradera");
     const seeMoreBlocket = document.getElementById("seeMoreBlocket");
+    const seeMoreEbay = document.getElementById("seeMoreEbay");
 
     seeMoreTradera.style.display = "inline-block";
     seeMoreBlocket.style.display = "inline-block";
+    seeMoreEbay.style.display = "inline-block";
 
     const tab = await getCurrentTab();
     const pageKey = `page_${tab.url}`;
@@ -44,6 +47,12 @@ document.addEventListener("DOMContentLoaded", async () => {
             blocketContainer.innerHTML = pageData.lastBlocketResults;
         } else {
             blocketContainer.innerHTML = ""; // Ensure old results are cleared
+        }
+
+        if (pageData.lastEbayResults) {
+            ebayContainer.innerHTML = pageData.lastEbayResults;
+        } else {
+            ebayContainer.innerHTML = "";
         }
     });
 
@@ -144,6 +153,11 @@ async function fetchRelatedProducts(searchTerm, pageKey) {
         seeMoreBlocket.href = `https://www.blocket.se/annonser/hela_sverige?q=${encoded}`;
         console.log("[Popup] seeMoreBlocket href set to:", seeMoreBlocket.href);
     }
+    const seeMoreEbay = document.getElementById("seeMoreEbay");
+    if (seeMoreEbay) {
+        seeMoreEbay.href = `https://www.ebay.com/sch/i.html?_nkw=${encoded}`;
+        console.log("[Popup] seeMoreEbay href set to:", seeMoreEbay.href);
+    }
 
     try {
         const response = await fetch(`https://shafv4-production.up.railway.app/related-products?product_name=${encodeURIComponent(searchTerm)}`, {
@@ -200,9 +214,11 @@ async function fetchRelatedProducts(searchTerm, pageKey) {
         // Clear containers right before adding new results
         traderaContainer.innerHTML = "";
         blocketContainer.innerHTML = "";
+        ebayContainer.innerHTML = "";
 
         let traderaHTML = "";
         let blocketHTML = "";
+        let ebayHTML = "";
 
         if (data.tradera && data.tradera.length > 0) {
             console.log(`[Popup] Updating Tradera listings.`);
@@ -232,11 +248,26 @@ async function fetchRelatedProducts(searchTerm, pageKey) {
             blocketHTML = "<p>No listings found on Blocket.</p>";
         }
 
+        if (data.ebay && data.ebay.length > 0) {
+            console.log(`[Popup] Updating eBay listings.`);
+            data.ebay.forEach(item => {
+                if (!item.title || !item.price || !item.link) return; // Skip invalid items
+                let listing = createListing(item);
+                ebayContainer.appendChild(listing);
+                ebayHTML += listing.outerHTML;
+            });
+        } else {
+            console.log(`[Popup] No listings found on eBay.`);
+            ebayContainer.innerHTML = "<p>No listings found on eBay.</p>";
+            ebayHTML = "<p>No listings found on eBay.</p>";
+        }
+
         chrome.storage.local.set({
             [pageKey]: {
                 lastDetectedProduct: searchTerm,
                 lastTraderaResults: traderaHTML,
-                lastBlocketResults: blocketHTML
+                lastBlocketResults: blocketHTML,
+                lastEbayResults: ebayHTML
             }
         });
 
@@ -266,5 +297,6 @@ function updateSeeMoreLinks(searchTerm) {
     console.log("[Popup] Updated see-more links:", {
         tradera: seeMoreTradera.href,
         blocket: seeMoreBlocket.href,
+        ebay: document.getElementById("seeMoreEbay")?.href
     });
 }

@@ -14,6 +14,7 @@ from bs4 import BeautifulSoup
 from zeep import Client, xsd
 import shutil
 import os
+from ebaysdk.finding import Connection as Finding
 from dotenv import load_dotenv
 
 # Load environment variables from .env file
@@ -22,6 +23,11 @@ load_dotenv()
 TRADERA_API_URL = os.environ.get("TRADERA_API_URL")
 TRADERA_APP_ID = os.environ.get("TRADERA_APP_ID")
 TRADERA_APP_KEY = os.environ.get("TRADERA_APP_KEY")
+
+# eBay API Configuration
+EBAY_APP_ID = os.environ.get("EBAY_APP_ID")
+EBAY_CERT_ID = os.environ.get("EBAY_CERT_ID")
+EBAY_SITE_ID = os.environ.get("EBAY_SITE_ID", "71")  # Default to Sweden (71)
 
 # Configure logging
 logging.basicConfig(level=logging.INFO, format="%(asctime)s - %(levelname)s - %(message)s")
@@ -32,6 +38,8 @@ logging.info(f"[Backend] Python version: {os.sys.version}")
 logging.info(f"[Backend] PORT environment variable: {os.environ.get('PORT', 'NOT SET')}")
 logging.info(f"[Backend] Tradera API URL configured: {bool(TRADERA_API_URL)}")
 logging.info(f"[Backend] Tradera credentials configured: {bool(TRADERA_APP_ID and TRADERA_APP_KEY)}")
+logging.info(f"[Backend] eBay credentials configured: {bool(EBAY_APP_ID)}")
+logging.info(f"[Backend] eBay Site ID: {EBAY_SITE_ID}")
 
 app = FastAPI()
 
@@ -86,7 +94,8 @@ async def root():
         "endpoints": {
             "health": "/health",
             "related_products": "/related-products?product_name=<query>"
-        }
+        },
+        "supported_marketplaces": ["Tradera", "Blocket", "eBay"]
     }
 
 @app.get("/health")
@@ -95,6 +104,7 @@ async def health_check():
     return {
         "status": "healthy",
         "tradera_configured": bool(TRADERA_API_URL and TRADERA_APP_ID and TRADERA_APP_KEY),
+        "ebay_configured": bool(EBAY_APP_ID),
         "chromium_available": os.path.exists("/usr/bin/chromium"),
         "port": os.environ.get("PORT", "8000")
     }
@@ -269,6 +279,75 @@ def fetch_vinted_results(query: str):
     logging.info(f"[Backend] Parsed {len(items)} results from Blocket.")
     return items
 
+def fetch_ebay_results(query: str):
+    """Fetches relevant listings from eBay using the Finding API."""
+    logging.info(f"[Backend] Fetching eBay results for query: {query}")
+    
+    if not EBAY_APP_ID:
+        logging.warning("[Backend] eBay API credentials not configured")
+        return [{"error": "eBay API credentials not configured"}]
+    
+    try:
+        # Initialize eBay Finding API client
+        api = Finding(
+            appid=EBAY_APP_ID,
+            config_file=None,
+            siteid=EBAY_SITE_ID
+        )
+        
+        # Search for items
+        response = api.execute('findItemsAdvanced', {
+            'keywords': query,
+            'sortOrder': 'BestMatch',
+            'paginationInput': {
+                'entriesPerPage': 3,
+                'pageNumber': 1
+            },
+            'itemFilter': [
+                {'name': 'ListingType', 'value': ['FixedPrice', 'Auction']},
+                {'name': 'Condition', 'value': 'Used'}
+            ]
+        })
+        
+        # Parse results
+        items = []
+        if response.reply.ack == 'Success':
+            search_result = response.reply.searchResult
+            if hasattr(search_result, 'item'):
+                for item in search_result.item[:3]:  # Get top 3 items
+                    # Extract price
+                    price_info = "No price available"
+                    if hasattr(item, 'sellingStatus'):
+                        selling_status = item.sellingStatus
+                        if hasattr(selling_status, 'currentPrice'):
+                            price = selling_status.currentPrice
+                            currency = getattr(price, '_currencyId', 'SEK')
+                            amount = getattr(price, 'value', 'N/A')
+                            price_info = f"{amount} {currency}"
+                    
+                    # Extract image URL
+                    image_url = ""
+                    if hasattr(item, 'galleryURL'):
+                        image_url = item.galleryURL
+                    
+                    items.append({
+                        "title": getattr(item, 'title', 'No title found'),
+                        "price": price_info,
+                        "link": getattr(item, 'viewItemURL', 'No link found'),
+                        "image": image_url,
+                    })
+            else:
+                logging.info("[Backend] No items found in eBay search")
+        else:
+            logging.warning(f"[Backend] eBay API returned: {response.reply.ack}")
+        
+        logging.info(f"[Backend] Parsed {len(items)} results from eBay.")
+        return items if items else [{"message": "No items found on eBay"}]
+        
+    except Exception as e:
+        logging.error(f"[Backend] eBay API call failed: {str(e)}")
+        return [{"error": f"eBay API call failed: {str(e)}"}]
+
 @app.get("/related-products")
 async def get_related_products(product_name: str = Query(..., min_length=1)):
     """Handles incoming requests from the frontend to fetch related listings."""
@@ -277,17 +356,22 @@ async def get_related_products(product_name: str = Query(..., min_length=1)):
     try:
         # Run fetching with controlled parallelism:
         # - Tradera (API call, no Selenium) runs freely
+        # - eBay (API call, no Selenium) runs freely
         # - Blocket (Selenium) limited by semaphore
         tradera_task = asyncio.to_thread(fetch_tradera_results, product_name)
+        ebay_task = asyncio.to_thread(fetch_ebay_results, product_name)
         blocket_task = fetch_with_selenium_limit(fetch_blocket_results, product_name)
         
-        tradera_results, blocket_results = await asyncio.gather(tradera_task, blocket_task)
+        tradera_results, ebay_results, blocket_results = await asyncio.gather(
+            tradera_task, ebay_task, blocket_task
+        )
         
         logging.info("[Backend] Fetched all results successfully.")
 
         return {
             "tradera": tradera_results,
             "blocket": blocket_results,
+            "ebay": ebay_results,
         }
     except Exception as e:
         logging.error(f"[Backend] Error fetching related products: {str(e)}")
