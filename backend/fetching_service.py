@@ -361,23 +361,32 @@ async def get_related_products(product_name: str = Query(..., min_length=1)):
         # - eBay (API call, no Selenium) runs freely
         # - Blocket (Selenium) limited by semaphore
         tradera_task = asyncio.to_thread(fetch_tradera_results, product_name)
-        ebay_task = asyncio.to_thread(fetch_ebay_results, product_name)
+        # TEMPORARILY DISABLED: Uncomment when frontend is updated
+        # ebay_task = asyncio.to_thread(fetch_ebay_results, product_name)
         blocket_task = fetch_with_selenium_limit(fetch_blocket_results, product_name)
         
-        tradera_results, ebay_results, blocket_results = await asyncio.gather(
-            tradera_task, ebay_task, blocket_task
+        # Use return_exceptions=True to ensure one failure doesn't crash all results
+        results = await asyncio.gather(
+            tradera_task, blocket_task,
+            return_exceptions=True
         )
         
-        logging.info("[Backend] Fetched all results successfully.")
+        # Unpack results and handle any exceptions
+        tradera_results = results[0] if not isinstance(results[0], Exception) else [{"error": f"Tradera fetch failed: {str(results[0])}"}]
+        blocket_results = results[1] if not isinstance(results[1], Exception) else [{"error": f"Blocket fetch failed: {str(results[1])}"}]
+        
+        logging.info(f"[Backend] Fetched results - Tradera: {len(tradera_results)}, Blocket: {len(blocket_results)}")
 
+        # TEMPORARILY DISABLED: Include eBay in response when frontend is updated
         return {
             "tradera": tradera_results,
             "blocket": blocket_results,
-            "ebay": ebay_results,
+            # "ebay": ebay_results,  # Uncomment when frontend deployed
         }
     except Exception as e:
         logging.error(f"[Backend] Error fetching related products: {str(e)}")
         return {"error": str(e)}
+
 
 # Only use to run locally
 # if __name__ == "__main__":
