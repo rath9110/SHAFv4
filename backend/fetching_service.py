@@ -289,10 +289,11 @@ def fetch_ebay_results(query: str):
         return [{"error": "eBay API credentials not configured"}]
     
     try:
-        # Initialize eBay Finding API client
+        # Initialize eBay Finding API client with global_id
         api = Finding(
             appid=EBAY_APP_ID,
-            config_file=None
+            config_file=None,
+            siteid=EBAY_GLOBAL_ID
         )
         
         # Search for items
@@ -308,7 +309,7 @@ def fetch_ebay_results(query: str):
                 {'name': 'Condition', 'value': 'Used'}
             ],
             'outputSelector': ['StoreInfo']
-        }, global_id=EBAY_GLOBAL_ID)
+        })
         
         # Parse results
         items = []
