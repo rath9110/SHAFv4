@@ -217,11 +217,19 @@ def fetch_blocket_results(query: str):
     driver.quit()
 
     items = []
-    for item in soup.select("article", limit=3):  # Get top 3 items
+    # Fix: BeautifulSoup's select() doesn't support limit parameter, use slicing instead
+    for item in soup.select("article")[:3]:  # Get top 3 items
         title_element = item.select_one("h2")
         title = title_element.text.strip() if title_element else "No title found"
 
-        price_element = item.select_one("div[class*='Price']")
+        # Fix: Update price selector to match Blocket's current HTML structure
+        # Blocket uses <span> inside <div class="...font-bold..."> for prices
+        price_element = (
+            item.select_one("div.font-bold span") or  # Primary selector
+            item.select_one("div.flex.justify-between span") or  # Fallback 1
+            item.select_one("span[class*='price']") or  # Fallback 2
+            item.select_one("div[class*='Price']")  # Original selector as last resort
+        )
         price = price_element.text.strip() if price_element else "No price found"
 
         link_element = item.select_one("a")
