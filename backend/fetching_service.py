@@ -247,46 +247,6 @@ def fetch_blocket_results(query: str):
     logging.info(f"[Backend] Parsed {len(items)} results from Blocket.")
     return items
 
-def fetch_vinted_results(query: str):
-    """Fetches relevant listings from Vinted by scraping the website."""
-    logging.info(f"[Backend] Fetching vinted results for query: {query}")
-    driver = None
-    try:
-        driver = get_driver()
-        url = f"https://www.vinted.se/catalog?search_text={query}"
-        driver.get(url)
-        time.sleep(random.uniform(2, 5))  # Allow JavaScript to load
-    except Exception as e:
-        logging.warning(f"[Backend] Timeout/error waiting for Vinted results for {query}: {e}")
-        if driver:
-            driver.quit()
-        return [{"error": "Failed to fetch Vinted results"}]
-
-    soup = BeautifulSoup(driver.page_source, "html.parser")
-    driver.quit()
-
-    items = []
-    for item in soup.select("article", limit=3):  # Get top 3 items
-        title_element = item.select_one("h2")
-        title = title_element.text.strip() if title_element else "No title found"
-
-        price_element = item.select_one("div[class*='Price']")
-        price = price_element.text.strip() if price_element else "No price found"
-
-        link_element = item.select_one("a")
-        if link_element:
-            href = link_element["href"]
-            link = href if href.startswith("http") else f"https://www.vinted.se{href}"
-        else:
-            link = "No link found"
-
-        image_element = item.select_one("img")
-        image = image_element["src"] if image_element else ""
-
-        items.append({"title": title, "price": price, "link": link, "image": image})
-
-    logging.info(f"[Backend] Parsed {len(items)} results from Blocket.")
-    return items
 
 def fetch_ebay_results(query: str):
     """Fetches relevant listings from eBay using the Finding API."""

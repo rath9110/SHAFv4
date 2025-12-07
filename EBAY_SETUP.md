@@ -74,7 +74,7 @@ Expected response should include:
 
 After completing these initial preparations:
 1. The backend code will be updated to integrate eBay Finding API
-2. Product searches will include eBay results alongside Tradera, Blocket, and Vinted
+2. Product searches will include eBay results alongside Tradera and Blocket
 3. Extension popup will display eBay listings
 
 ## API Rate Limits
