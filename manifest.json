@@ -1,15 +1,13 @@
 {
   "manifest_version": 3,
   "name": "Second-Hand Finder",
-  "version": "2.0",
+  "version": "2.1",
   "permissions": [
     "activeTab",
-    "scripting",
     "storage"
   ],
   "host_permissions": [
     "*://*.tradera.com/*",
-    "*://*.blocket.se/*",
     "*://*.ebay.com/*",
     "*://*.ebay.se/*"
   ],

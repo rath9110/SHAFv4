@@ -5,15 +5,15 @@ document.addEventListener("DOMContentLoaded", async () => {
     const copyButton = document.getElementById("copyProductName");
     const searchResults = document.getElementById("searchResults");
     const traderaContainer = document.querySelector("#traderaResults .listings-container");
-    const blocketContainer = document.querySelector("#blocketResults .listings-container");
+
     const ebayContainer = document.querySelector("#ebayResults .listings-container");
 
     const seeMoreTradera = document.getElementById("seeMoreTradera");
-    const seeMoreBlocket = document.getElementById("seeMoreBlocket");
+
     const seeMoreEbay = document.getElementById("seeMoreEbay");
 
     seeMoreTradera.style.display = "inline-block";
-    seeMoreBlocket.style.display = "inline-block";
+
     seeMoreEbay.style.display = "inline-block";
 
     const tab = await getCurrentTab();
@@ -43,11 +43,7 @@ document.addEventListener("DOMContentLoaded", async () => {
             traderaContainer.innerHTML = "";
         }
 
-        if (pageData.lastBlocketResults) {
-            blocketContainer.innerHTML = pageData.lastBlocketResults;
-        } else {
-            blocketContainer.innerHTML = ""; // Ensure old results are cleared
-        }
+        // Blocket removed for Chrome Store compliance
 
         if (pageData.lastEbayResults) {
             ebayContainer.innerHTML = pageData.lastEbayResults;
@@ -142,17 +138,14 @@ async function fetchRelatedProducts(searchTerm, pageKey) {
     searchResults.textContent = `Searching for "${searchTerm}"...`;
 
     const seeMoreTradera = document.getElementById("seeMoreTradera");
-    const seeMoreBlocket = document.getElementById("seeMoreBlocket");
+
 
     const encoded = encodeURIComponent(searchTerm);
     if (seeMoreTradera) {
         seeMoreTradera.href = `https://www.tradera.com/search?q=${encoded}`;
         console.log("[Popup] seeMoreTradera href set to:", seeMoreTradera.href);
     }
-    if (seeMoreBlocket) {
-        seeMoreBlocket.href = `https://www.blocket.se/annonser/hela_sverige?q=${encoded}`;
-        console.log("[Popup] seeMoreBlocket href set to:", seeMoreBlocket.href);
-    }
+    // Blocket removed for Chrome Store compliance
     const seeMoreEbay = document.getElementById("seeMoreEbay");
     if (seeMoreEbay) {
         seeMoreEbay.href = `https://www.ebay.com/sch/i.html?_nkw=${encoded}`;
@@ -213,11 +206,11 @@ async function fetchRelatedProducts(searchTerm, pageKey) {
 
         // Clear containers right before adding new results
         traderaContainer.innerHTML = "";
-        blocketContainer.innerHTML = "";
+
         ebayContainer.innerHTML = "";
 
         let traderaHTML = "";
-        let blocketHTML = "";
+
         let ebayHTML = "";
 
         if (data.tradera && data.tradera.length > 0) {
@@ -234,18 +227,9 @@ async function fetchRelatedProducts(searchTerm, pageKey) {
             traderaHTML = "<p>No listings found on Tradera.</p>";
         }
 
-        if (data.blocket && data.blocket.length > 0) {
-            console.log(`[Popup] Updating Blocket listings.`);
-            data.blocket.forEach(item => {
-                if (!item.title || !item.price || !item.link) return; // Skip invalid items
-                let listing = createListing(item);
-                blocketContainer.appendChild(listing);
-                blocketHTML += listing.outerHTML;
-            });
-        } else {
-            console.log(`[Popup] No listings found on Blocket.`);
-            blocketContainer.innerHTML = "<p>No listings found on Blocket.</p>";
-            blocketHTML = "<p>No listings found on Blocket.</p>";
+        // Blocket: Backend may return results but frontend ignores them (Chrome Store compliance)
+        if (data.blocket) {
+            console.log(`[Popup] Blocket results received but not displayed (removed for Chrome Store).`);
         }
 
         if (data.ebay && data.ebay.length > 0) {
@@ -266,7 +250,7 @@ async function fetchRelatedProducts(searchTerm, pageKey) {
             [pageKey]: {
                 lastDetectedProduct: searchTerm,
                 lastTraderaResults: traderaHTML,
-                lastBlocketResults: blocketHTML,
+
                 lastEbayResults: ebayHTML
             }
         });
@@ -281,9 +265,7 @@ async function fetchRelatedProducts(searchTerm, pageKey) {
 
 function updateSeeMoreLinks(searchTerm) {
     const seeMoreTradera = document.getElementById("seeMoreTradera");
-    const seeMoreBlocket = document.getElementById("seeMoreBlocket");
-
-    if (!seeMoreTradera || !seeMoreBlocket) {
+    if (!seeMoreTradera) {
         console.warn("[Popup] See-more links not found in DOM");
         return;
     }
@@ -292,11 +274,11 @@ function updateSeeMoreLinks(searchTerm) {
 
     // IMPORTANT: full absolute URLs with https://
     seeMoreTradera.href = `https://www.tradera.com/search?q=${encoded}`;
-    seeMoreBlocket.href = `https://www.blocket.se/annonser/hela_sverige?q=${encoded}`;
+
 
     console.log("[Popup] Updated see-more links:", {
         tradera: seeMoreTradera.href,
-        blocket: seeMoreBlocket.href,
+
         ebay: document.getElementById("seeMoreEbay")?.href
     });
 }

@@ -74,7 +74,7 @@ Expected response should include:
 
 After completing these initial preparations:
 1. The backend code will be updated to integrate eBay Finding API
-2. Product searches will include eBay results alongside Tradera and Blocket
+2. Product searches will include eBay results alongside Tradera (Blocket removed for Chrome Store compliance)
 3. Extension popup will display eBay listings
 
 ## API Rate Limits

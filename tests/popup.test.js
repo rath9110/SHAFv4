@@ -24,21 +24,6 @@ global.chrome = {
         executeScript: jest.fn()
     }
 };
-
-// Mock DOM elements
-document.body.innerHTML = `
-    <div id="detectedProduct"></div>
-    <button id="copyProductName"></button>
-    <div id="searchResults"></div>
-    <div id="traderaResults"><div class="listings-container"></div></div>
-    <div id="blocketResults"><div class="listings-container"></div></div>
-    <a id="seeMoreTradera"></a>
-    <a id="seeMoreBlocket"></a>
-`;
-
-// Import or copy the logic we want to test. 
-// Since popup.js is not a module, we might need to extract the function or load the file.
-// For this test, I will replicate the vulnerable logic to demonstrate the fix, 
 // or ideally we should refactor popup.js to be testable. 
 // Given the constraints, I'll write a test that simulates the DOM manipulation issue.
 
